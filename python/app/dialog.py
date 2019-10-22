@@ -71,5 +71,5 @@ class AppDialog(QtGui.QWidget):
         # - An Sgtk API instance, via self._app.sgtk 
         
         # lastly, set up our very basic UI
-        self.ui.context.setText("Current Context: %s" % self._app.context)
+        # self.ui.context.setText("Current Context: %s" % self._app.context)
 
