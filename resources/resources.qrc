@@ -1,3 +1,18 @@
+<!--
+File    : resources.qrc
+Project : resources
+Author  : Yuri Meshalkin (yuri.meshalkin@gmail.com)
+
+Created : Wednesday, 23rd October 2019 12:20:53 am
+Modified: Wednesday, 23rd October 2019 12:41:47 am
+
+(c) Copyright 2018 - 2019 Yuri Meshalkin, MeshStudio
+
+Description:
+
+-->
+
+
 <RCC>
   <qresource prefix="res">
     <file>sg_logo.png</file>
