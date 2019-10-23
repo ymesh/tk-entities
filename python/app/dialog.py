@@ -33,13 +33,6 @@ def show_dialog(app_instance):
     # we pass the dialog class to this method and leave the actual construction
     # to be carried out by toolkit.
     app_instance.engine.show_dialog("Entities", app_instance, AppDialog)
-    sg = app_instance.shotgun
-    
-    context = app_instance.context
-    print 'context =', context.to_dict()
-    
-    entity_names = sg.schema_entity_read().keys()
-    print 'entities =', sorted(entity_names)
 
 
 class AppDialog(QtGui.QWidget):
@@ -72,4 +65,14 @@ class AppDialog(QtGui.QWidget):
         
         # lastly, set up our very basic UI
         # self.ui.context.setText("Current Context: %s" % self._app.context)
+        sg = self._app.shotgun
+    
+        # context = self._app.context
+        # print 'context =', context.to_dict()
+        
+        entity_names = sg.schema_entity_read().keys()
+        for entity_name in sorted(entity_names):
+            item = QtGui.QListWidgetItem(entity_name)
+            item.setData(QtCore.Qt.UserRole, 'entity')
+            self.ui.ent_listWidget.addItem(item)
 
