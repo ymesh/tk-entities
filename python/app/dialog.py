@@ -51,28 +51,77 @@ class AppDialog(QtGui.QWidget):
         self.ui = Ui_Dialog() 
         self.ui.setupUi(self)
         
-        # most of the useful accessors are available through the Application class instance
-        # it is often handy to keep a reference to this. You can get it via the following method:
-        self._app = sgtk.platform.current_bundle()
-        
-        # logging happens via a standard toolkit logger
-        logger.info("Launching Entities Application...")
-        
         # via the self._app handle we can for example access:
         # - The engine, via self._app.engine
         # - A Shotgun API instance, via self._app.shotgun
         # - An Sgtk API instance, via self._app.sgtk 
+        self._app = sgtk.platform.current_bundle()
+
+        ent_list_widget = self.ui.ent_listWidget
+        fld_list_widget = self.ui.fld_listWidget
+        # TODO 
+        # setup this properties in .ui files
+        single_selection = QtGui.QAbstractItemView.SingleSelection
+        ent_list_widget.setSelectionMode(single_selection)
+        fld_list_widget.setSelectionMode(single_selection)
+
+        ent_list_widget.itemSelectionChanged.connect(self.disp_fields)
         
-        # lastly, set up our very basic UI
-        # self.ui.context.setText("Current Context: %s" % self._app.context)
+        self.disp_entities()
+        self.disp_fields()
+
+        # logging happens via a standard toolkit logger
+        logger.info("Launching Entities Application...")
+        return
+
+
+    def disp_entities(self):
+        '''
+        Display entities
+        '''
         sg = self._app.shotgun
-    
-        # context = self._app.context
-        # print 'context =', context.to_dict()
-        
-        entity_names = sg.schema_entity_read().keys()
+        project = self._app.engine.context.project
+        ent_list_widget = self.ui.ent_listWidget
+        item_role = 'entity'
+
+        # clear list
+        ent_list_widget.clear()
+
+        entities = sg.schema_entity_read(project)
+        entity_names = entities.keys()
+
         for entity_name in sorted(entity_names):
             item = QtGui.QListWidgetItem(entity_name)
-            item.setData(QtCore.Qt.UserRole, 'entity')
-            self.ui.ent_listWidget.addItem(item)
+            item.setData(QtCore.Qt.UserRole, item_role)
+            ent_list_widget.addItem(item)
+            print("{} = {}".format(entity_name, entities[entity_name]))
+        return
+
+    def disp_fields(self):
+        '''
+        Display entities
+        '''
+        sg = self._app.shotgun
+        project = self._app.engine.context.project
+        fld_list_widget = self.ui.fld_listWidget
+        ent_list_widget = self.ui.ent_listWidget
+        item_role = 'field'
+
+        # clear list
+        fld_list_widget.clear()
+
+        entity_item = ent_list_widget.currentItem()
+        if not entity_item:
+            return
+
+        entity_name = entity_item.text()
+        fields = sg.schema_field_read(entity_name, None, project)
+        field_names = fields.keys()
+
+        for field_name in sorted(field_names):
+            item = QtGui.QListWidgetItem(field_name)
+            item.setData(QtCore.Qt.UserRole, item_role)
+            fld_list_widget.addItem(item)
+            print("{} = {}".format(field_name, fields[field_name]))
+        return
 
