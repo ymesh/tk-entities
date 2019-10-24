@@ -19,3 +19,9 @@ QListView, QTableView, QScrollArea {
 
 */
 
+/* Use open sans font across the app if core supports it */
+QWidget {
+    font-family: Open Sans;
+    font-style: Regular; 
+    font: 14px;
+}

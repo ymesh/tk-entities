@@ -59,6 +59,8 @@ class AppDialog(QtGui.QWidget):
 
         ent_list_widget = self.ui.ent_listWidget
         fld_list_widget = self.ui.fld_listWidget
+        # ent_list_widget.setStyleSheet("QListWidget {font: 20px;}")
+
         # TODO 
         # setup this properties in .ui files
         single_selection = QtGui.QAbstractItemView.SingleSelection
@@ -94,7 +96,7 @@ class AppDialog(QtGui.QWidget):
             item = QtGui.QListWidgetItem(entity_name)
             item.setData(QtCore.Qt.UserRole, item_role)
             ent_list_widget.addItem(item)
-            print("{} = {}".format(entity_name, entities[entity_name]))
+            # print("{} = {}".format(entity_name, entities[entity_name]))
         return
 
     def disp_fields(self):
@@ -118,10 +120,13 @@ class AppDialog(QtGui.QWidget):
         fields = sg.schema_field_read(entity_name, None, project)
         field_names = fields.keys()
 
+        # print '*' * 40
+        # print entity_name.center(40)
+        # print '*' * 40
         for field_name in sorted(field_names):
             item = QtGui.QListWidgetItem(field_name)
             item.setData(QtCore.Qt.UserRole, item_role)
             fld_list_widget.addItem(item)
-            print("{} = {}".format(field_name, fields[field_name]))
+            # print("{} = {}".format(field_name, fields[field_name]))
         return
 
