@@ -50,6 +50,9 @@ class AppDialog(QtGui.QWidget):
         # now load in the UI that was created in the UI designer
         self.ui = Ui_Dialog() 
         self.ui.setupUi(self)
+
+        self.ent_filter = ''
+        self.fld_filter = ''
         
         # via the self._app handle we can for example access:
         # - The engine, via self._app.engine
@@ -59,23 +62,49 @@ class AppDialog(QtGui.QWidget):
 
         ent_list_widget = self.ui.ent_listWidget
         fld_list_widget = self.ui.fld_listWidget
-        # ent_list_widget.setStyleSheet("QListWidget {font: 20px;}")
+        
+        ent_search = self.ui.ent_search
+        fld_search = self.ui.fld_search
 
         # TODO 
         # setup this properties in .ui files
         single_selection = QtGui.QAbstractItemView.SingleSelection
         ent_list_widget.setSelectionMode(single_selection)
         fld_list_widget.setSelectionMode(single_selection)
+        # ent_list_widget.setStyleSheet("QListWidget {font: 20px;}")
+
+
+        # connect signals
+        ent_search.search_edited.connect(self._on_ent_search_edited)
+        fld_search.search_edited.connect(self._on_fld_search_edited)
+        # ent_search.search_changed.connect(self._on_ent_search_changed)
 
         ent_list_widget.itemSelectionChanged.connect(self.disp_fields)
         
+        # display widgets
         self.disp_entities()
         self.disp_fields()
 
         # logging happens via a standard toolkit logger
         logger.info("Launching Entities Application...")
+        
         return
 
+    def _on_ent_search_edited(self, text):
+        '''
+        Update entity text filter value 
+        '''
+        self.ent_filter = text
+        self.disp_entities()
+        return
+
+    def _on_fld_search_edited(self, text):
+        '''
+        Update field text filter value 
+        '''
+        self.fld_filter = text
+        self.disp_fields()
+        return
 
     def disp_entities(self):
         '''
@@ -93,6 +122,9 @@ class AppDialog(QtGui.QWidget):
         entity_names = entities.keys()
 
         for entity_name in sorted(entity_names):
+            if self.ent_filter:
+                if not entity_name.lower().startswith(self.ent_filter.lower()):
+                    continue
             item = QtGui.QListWidgetItem(entity_name)
             item.setData(QtCore.Qt.UserRole, item_role)
             ent_list_widget.addItem(item)
@@ -124,6 +156,9 @@ class AppDialog(QtGui.QWidget):
         # print entity_name.center(40)
         # print '*' * 40
         for field_name in sorted(field_names):
+            if self.fld_filter:
+                if not field_name.lower().startswith(self.fld_filter.lower()):
+                    continue
             item = QtGui.QListWidgetItem(field_name)
             item.setData(QtCore.Qt.UserRole, item_role)
             fld_list_widget.addItem(item)
