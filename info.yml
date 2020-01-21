@@ -12,6 +12,11 @@
 
 # expected fields in the configuration file for this engine
 configuration:
+  display_name:
+    type: str
+    default_value: Entities
+    description: Specify the name that should be used in menus and the main
+                  publish dialog
 
 # this app works in all engines - it does not contain 
 # any host application specific commands
@@ -21,7 +26,6 @@ supported_engines:
 requires_shotgun_fields:
         
 # More verbose description of this item 
-display_name: "Entities"
 description: "Shotgun application that displays a list of shotgun entities and \
 corresponding attributes"
 
